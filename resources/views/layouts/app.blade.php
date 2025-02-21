@@ -34,13 +34,18 @@
         <div class="flex-grow mx-8">
             <form action="{{ route('questions.search') }}" method="GET">
                 <input
-                    type="text"
-                    name="query"
-                    placeholder="Rechercher des questions..."
+                type="text" 
+            name="query" 
+            placeholder="Rechercher une question..." 
+            value="{{ request()->get('query') }}"
+                   
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
             </form>
         </div>
+        <div class="mb-6">
+  
+</div>
         <div class="flex items-center space-x-4">
             @guest
                 <a href="{{ route('register') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">S'inscrire</a>
@@ -72,5 +77,30 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     @yield('extra_js')
+
+    <script>
+const searchForm = document.querySelector('form');
+const searchInput = searchForm.querySelector('input[name="query"]');
+const questionsContainer = document.getElementById('questions-container');
+
+let debounceTimer;
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        const query = this.value;
+        
+        fetch(`/questions/search?query=${encodeURIComponent(query)}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            questionsContainer.innerHTML = data.html;
+        });
+    }, 300);
+});
+</script>
 </body>
 </html>
