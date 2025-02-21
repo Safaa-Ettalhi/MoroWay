@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 Route::get('/', [QuestionController::class, 'index'])->name('home');
 Route::get('/search', [QuestionController::class, 'search'])->name('questions.search');
-
+Route::get('/questions/{question}', [QuestionController::class, 'show'])->name('questions.show');
+Route::get('/popular', [QuestionController::class, 'popular'])->name('questions.popular');
+    Route::get('/recent', [QuestionController::class, 'recent'])->name('questions.recent');
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -23,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
     Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create')->middleware('auth');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store')->middleware('auth');
-    Route::get('/questions/{question}', [QuestionController::class, 'show'])->name('questions.show');
+   
     //Route::get('/search', [QuestionController::class, 'search'])->name('questions.search');
     
     // Réponses
